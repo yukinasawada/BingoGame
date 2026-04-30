@@ -6,13 +6,13 @@ import java.util.List;
 
 class BingoGame {
 
-	final int row = 7;
-	final int center = row / 2;
+	final int siz = 7;
+	final int center = siz / 2;
 
 	void start() {
 		//ビンゴカードとビンゴカードチェックを初期化
-		int[][] bingoCard = new int[row][row];
-		boolean[][] checkOpened = new boolean[row][row];
+		int[][] bingoCard = new int[siz][siz];
+		boolean[][] checkOpened = new boolean[siz][siz];
 		int pickNumber = 0;
 
 		//FREEに予めtureを入れておく
@@ -31,8 +31,8 @@ class BingoGame {
 			System.out.println("ball[" + pickCount + "]:" + pickNumber);
 
 			//出たボールがカード内にあればcheckOpenedをtrueにする
-			for (int i = 0; i < row; i++) {
-				for (int j = 0; j < row; j++) {
+			for (int i = 0; i < siz; i++) {
+				for (int j = 0; j < siz; j++) {
 					//pickNumberと一致したときTrueにする
 					if (bingoCard[i][j] == pickNumber) {
 						checkOpened[i][j] = true;
@@ -71,10 +71,10 @@ class BingoGame {
 
 	int[][] creatBingoCard() {
 
-		int[][] bingoCard = new int[row][row];
+		int[][] bingoCard = new int[siz][siz];
 		ArrayList<ArrayList<Integer>> lists = new ArrayList<ArrayList<Integer>>();
 
-		for (int j = 0; j < row; j++) {
+		for (int j = 0; j < siz; j++) {
 
 			ArrayList<Integer> list = new ArrayList<>();
 
@@ -88,7 +88,7 @@ class BingoGame {
 			lists.add(list);
 
 			//シャッフルした数字をビンゴカードに格納
-			for (int i = 0; i < row; i++) {
+			for (int i = 0; i < siz; i++) {
 				bingoCard[i][j] = lists.get(j).get(i);
 			}
 		}
@@ -98,88 +98,55 @@ class BingoGame {
 	int[] checkLines(boolean[][] checkOpened) {
 		int reach = 0;
 		int bingo = 0;
-		/* 上手く動かないのでコメントアウト。
-		int columnCount = 0;
-		
+
+		int[] rowCountList = new int[siz];
+		int[] columnCountList = new int[siz];
+
 		//横チェック・縦チェック
-		for (int i = 0; i < row; i++) {
-			//int count = 0;
-			int rowCount = 0;
-		
-			for (int j = 0; j < row; j++) {
+		for (int i = 0; i < siz; i++) {
+			for (int j = 0; j < siz; j++) {
 				if (checkOpened[i][j]) {
-					rowCount++;
-				} else if (checkOpened[j][i]) {
-					columnCount++;
+					rowCountList[i] = rowCountList[i] + 1;
+					columnCountList[j] = columnCountList[j] + 1;
 				}
 			}
-			if (rowCount == row && columnCount == row) {
+		}
+
+		for (int i = 0; i < siz; i++) {
+			if (rowCountList[i] == siz && columnCountList[i] == siz) {
 				bingo = bingo + 2;
-			} else if (rowCount == row || columnCount == row) {
+			} else if (rowCountList[i] == siz || columnCountList[i] == siz) {
 				bingo++;
-			} else if (rowCount == row - 1 && columnCount == row - 1) {
+			} else if (rowCountList[i] == siz - 1 && columnCountList[i] == siz - 1) {
 				reach = reach + 2;
-			} else if (rowCount == row - 1 || columnCount == row - 1) {
-				reach++;
-			}
-		}
-		*/
-
-		//横チェック
-		for (int i = 0; i < row; i++) {
-			int count = 0;
-
-			for (int j = 0; j < row; j++) {
-				if (checkOpened[i][j]) {
-					count++;
-				}
-			}
-			if (count == row) {
-				bingo++;
-			} else if (count == row - 1) {
-				reach++;
-			}
-		}
-
-		//縦チェック
-		for (int j = 0; j < row; j++) {
-			int count = 0;
-
-			for (int i = 0; i < row; i++) {
-				if (checkOpened[i][j]) {
-					count++;
-				}
-			}
-			if (count == row) {
-				bingo++;
-			} else if (count == row - 1) {
+			} else if (rowCountList[i] == siz - 1 || columnCountList[i] == siz - 1) {
 				reach++;
 			}
 		}
 
 		//斜めチェック(左上から右下)
 		int count = 0;
-		for (int i = 0; i < row; i++) {
+		for (int i = 0; i < siz; i++) {
 			if (checkOpened[i][i]) {
 				count++;
 			}
 		}
-		if (count == row) {
+		if (count == siz) {
 			bingo++;
-		} else if (count == row - 1) {
+		} else if (count == siz - 1) {
 			reach++;
 		}
 
 		//斜めチェック(右上から左下)
 		count = 0;
-		for (int i = 0; i < row; i++) {
-			if (checkOpened[i][row - 1 - i]) {
+		for (int i = 0; i < siz; i++) {
+			if (checkOpened[i][siz - 1 - i]) {
 				count++;
 			}
 		}
-		if (count == row) {
+		if (count == siz) {
 			bingo++;
-		} else if (count == row - 1) {
+		} else if (count == siz - 1) {
 			reach++;
 		}
 
@@ -190,9 +157,9 @@ class BingoGame {
 
 	void showBingoCard(int[][] bingoCard, boolean[][] checkOpened) {
 
-		for (int i = 0; i < row; i++) {
+		for (int i = 0; i < siz; i++) {
 
-			for (int j = 0; j < row; j++) {
+			for (int j = 0; j < siz; j++) {
 
 				//真ん中はFREEを表示
 				if (i == center && j == center) {
