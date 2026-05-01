@@ -101,8 +101,10 @@ class BingoGame {
 
 		int[] rowCountList = new int[siz];
 		int[] columnCountList = new int[siz];
+		int leftDiagonalCount = 0;
+		int rightDiagonalCount = 0;
 
-		//横チェック・縦チェック
+		//横チェック・縦チェック・斜めチェック
 		for (int i = 0; i < siz; i++) {
 			for (int j = 0; j < siz; j++) {
 				if (checkOpened[i][j]) {
@@ -113,40 +115,34 @@ class BingoGame {
 		}
 
 		for (int i = 0; i < siz; i++) {
+
 			if (rowCountList[i] == siz && columnCountList[i] == siz) {
 				bingo = bingo + 2;
 			} else if (rowCountList[i] == siz || columnCountList[i] == siz) {
 				bingo++;
-			} else if (rowCountList[i] == siz - 1 && columnCountList[i] == siz - 1) {
+			}
+			if (rowCountList[i] == siz - 1 && columnCountList[i] == siz - 1) {
 				reach = reach + 2;
 			} else if (rowCountList[i] == siz - 1 || columnCountList[i] == siz - 1) {
 				reach++;
 			}
-		}
 
-		//斜めチェック(左上から右下)
-		int count = 0;
-		for (int i = 0; i < siz; i++) {
 			if (checkOpened[i][i]) {
-				count++;
+				leftDiagonalCount++;
 			}
-		}
-		if (count == siz) {
-			bingo++;
-		} else if (count == siz - 1) {
-			reach++;
+			if (checkOpened[i][siz - 1 - i]) {
+				rightDiagonalCount++;
+			}
 		}
 
-		//斜めチェック(右上から左下)
-		count = 0;
-		for (int i = 0; i < siz; i++) {
-			if (checkOpened[i][siz - 1 - i]) {
-				count++;
-			}
-		}
-		if (count == siz) {
+		if (leftDiagonalCount == siz && rightDiagonalCount == siz) {
+			bingo = bingo + 2;
+		} else if (leftDiagonalCount == siz || rightDiagonalCount == siz) {
 			bingo++;
-		} else if (count == siz - 1) {
+		}
+		if (leftDiagonalCount == siz - 1 && rightDiagonalCount == siz - 1) {
+			reach = reach + 2;
+		} else if (leftDiagonalCount == siz - 1 || rightDiagonalCount == siz - 1) {
 			reach++;
 		}
 
